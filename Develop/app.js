@@ -10,26 +10,159 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+const team = [];
 
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
+empList();
 
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
+function empList() {
+    inquirer
+        .prompt([
+            {
+                type: 'list',
+                name: 'position',
+                message: `What's the employee's position?`,
+                choices: ["Manager", "Engineer", "Intern"],
+            },
+        ])
+        .then((response) => {
+            console.log(response);
+            let position = response.position;
+            
+            switch(position){
+                case "Manager":
+                    managerFunc();
+                    break
+                case "Engineer":
+                    engineerFunc();
+                    break
+                case "Intern":
+                    internFunc();
+                    break
+            }
+        });
+}
 
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
+const managerFunc = () => {
+    inquirer
+        .prompt([
+            {
+                type: 'input',
+                name: 'name',
+                message: `What's the manager's full name?`
+            },
+            {
+                type: 'input',
+                name: 'id',
+                message: `What's their ID Number?`
+            },
+            {
+                type: 'input',
+                name: 'email',
+                message: `What's their email?`
+            },
+            {
+                type: 'input',
+                name: 'number',
+                message: `What's their office number?`
+            },
+        ])
+        .then((response) => {
+            console.log(response);
 
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
+            const manager = new Manager(
+                response.name,
+                response.id,
+                response.email,
+                response.number,
+            );
+            team.push(manager);
+            // function here to continue adding employees or quit application
+            execute();
+        })
+};
 
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```
+const engineerFunc = () => {
+    inquirer
+        .prompt([
+            {
+                type: 'input',
+                name: 'name',
+                message: `What's the engineer's full name?`
+            },
+            {
+                type: 'input',
+                name: 'id',
+                message: `What's their ID Number?`
+            },
+            {
+                type: 'input',
+                name: 'email',
+                message: `What's their email?`
+            },
+            {
+                type: 'input',
+                name: 'username',
+                message: `What's their Github username?`
+            },
+        ])
+        .then((response) => {
+            console.log(response);
+
+            const engineer = new Engineer(
+                response.name,
+                response.id,
+                response.email,
+                response.username,
+            );
+            team.push(engineer);
+            // function here to continue adding employees or quit application
+            execute();
+        })
+};
+
+const internFunc = () => {
+    inquirer
+        .prompt([
+            {
+                type: 'input',
+                name: 'name',
+                message: `What's the intern's full name?`
+            },
+            {
+                type: 'input',
+                name: 'id',
+                message: `What's their ID Number?`
+            },
+            {
+                type: 'input',
+                name: 'email',
+                message: `What's their email?`
+            },
+            {
+                type: 'input',
+                name: 'school',
+                message: `What school did they attend?`
+            },
+        ])
+        .then((response) => {
+            console.log(response);
+
+            const intern = new Intern(
+                response.name,
+                response.id,
+                response.email,
+                response.school,
+            );
+            team.push(intern);
+            // function here to continue adding employees or quit application
+            execute();
+        })
+};
+
+const execute = () => {
+    const responseString = render(team);
+
+    fs.writeFile(outputPath, responseString, 'utf8', (err) =>
+        err ? console.log(err) : console.log('Success!')
+    );
+};
