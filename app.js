@@ -12,43 +12,17 @@ const render = require("./lib/htmlRenderer");
 
 const team = [];
 
-empList();
+managerFunc();
 
-function empList() {
-    inquirer
-        .prompt([
-            {
-                type: 'list',
-                name: 'position',
-                message: `What's the employee's position?`,
-                choices: ["Manager", "Engineer", "Intern"],
-            },
-        ])
-        .then((response) => {
-            console.log(response);
-            let position = response.position;
-            
-            switch(position){
-                case "Manager":
-                    managerFunc();
-                    break
-                case "Engineer":
-                    engineerFunc();
-                    break
-                case "Intern":
-                    internFunc();
-                    break
-            }
-        });
-}
+function managerFunc() {
+    console.log("Let's build your engineering team!");
 
-const managerFunc = () => {
     inquirer
         .prompt([
             {
                 type: 'input',
                 name: 'name',
-                message: `What's the manager's full name?`
+                message: `First, what's the manager's full name?`
             },
             {
                 type: 'input',
@@ -67,7 +41,7 @@ const managerFunc = () => {
             },
         ])
         .then((response) => {
-            console.log(response);
+            // console.log(response);
 
             const manager = new Manager(
                 response.name,
@@ -77,10 +51,13 @@ const managerFunc = () => {
             );
             team.push(manager);
             // function here to continue adding employees or quit application
-            execute();
+            // execute();
+            console.log(`Manager added to the team!
+            Next, let's add engineers...`)
+            engineerFunc();
         })
 };
-
+        
 const engineerFunc = () => {
     inquirer
         .prompt([
@@ -104,10 +81,16 @@ const engineerFunc = () => {
                 name: 'username',
                 message: `What's their Github username?`
             },
+            {
+                type: 'list',
+                name: 'add',
+                message: 'Are you adding more engineers to the team?',
+                choices: ["Yes", "No"],
+            }
         ])
         .then((response) => {
             console.log(response);
-
+        
             const engineer = new Engineer(
                 response.name,
                 response.id,
@@ -116,7 +99,18 @@ const engineerFunc = () => {
             );
             team.push(engineer);
             // function here to continue adding employees or quit application
-            execute();
+            // execute();
+                    
+            const add = response.add;
+
+            switch(add){
+                case "Yes":
+                    engineerFunc();
+                    break
+                case "No":
+                    internFunc();
+                    break
+            }
         })
 };
 
@@ -143,6 +137,12 @@ const internFunc = () => {
                 name: 'school',
                 message: `What school did they attend?`
             },
+            {
+                type: 'list',
+                name: 'add',
+                message: 'Are you adding more interns to the team?',
+                choices: ["Yes", "No"],
+            }
         ])
         .then((response) => {
             console.log(response);
@@ -155,8 +155,20 @@ const internFunc = () => {
             );
             team.push(intern);
             // function here to continue adding employees or quit application
-            execute();
-        })
+            // execute();
+
+            const add = response.add;
+
+            switch(add){
+                case "Yes":
+                    intern();
+                    break
+                case "No":
+                    console.log(`You have succesfully created your engineering team!`);
+                    execute();
+                    break
+            }
+        });
 };
 
 const execute = () => {
