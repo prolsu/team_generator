@@ -121,6 +121,7 @@ const internFunc = () => {
                 type: 'input',
                 name: 'name',
                 message: `What's the intern's full name?`
+                
             },
             {
                 type: 'input',
@@ -135,7 +136,7 @@ const internFunc = () => {
             {
                 type: 'input',
                 name: 'school',
-                message: `What school did they attend?`
+                message: `What school did they attend?` 
             },
             {
                 type: 'list',
